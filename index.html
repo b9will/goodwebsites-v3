@@ -130,6 +130,96 @@
     }
     .nav__link:hover { color: var(--orange); }
 
+    /* Burger button */
+    .nav__burger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 40px;
+      height: 40px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      z-index: 201;
+    }
+    .nav__burger span {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: var(--charcoal);
+      transition: transform 0.25s ease, opacity 0.25s ease;
+      transform-origin: center;
+    }
+    .nav__burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav__burger.open span:nth-child(2) { opacity: 0; }
+    .nav__burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile drawer */
+    .nav__drawer {
+      display: none;
+      position: fixed;
+      inset: 0;
+      top: 73px; /* nav height */
+      background: var(--cream);
+      border-top: var(--border);
+      z-index: 199;
+      flex-direction: column;
+      padding: 48px 32px;
+      gap: 0;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+    }
+    .nav__drawer.open { transform: translateX(0); }
+    .nav__drawer-link {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 36px;
+      line-height: 1;
+      letter-spacing: -1px;
+      color: var(--charcoal);
+      padding: 20px 0;
+      border-bottom: var(--border);
+      display: block;
+    }
+    .nav__drawer-link:hover { color: var(--orange); }
+    .nav__drawer-cta {
+      margin-top: 40px;
+    }
+    .nav__drawer-meta {
+      margin-top: auto;
+      padding-top: 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .nav__drawer-email {
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.6px;
+      color: var(--charcoal);
+      opacity: 0.6;
+    }
+    .nav__drawer-email:hover { opacity: 1; }
+    .nav__drawer-insta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.6px;
+      color: var(--charcoal);
+      opacity: 0.6;
+    }
+    .nav__drawer-insta:hover { opacity: 1; }
+
+    @media (max-width: 768px) {
+      .nav__links { display: none; }
+      .nav__burger { display: flex; }
+      .nav__drawer { display: flex; }
+    }
+
     /* ===========================
        HERO
        =========================== */
@@ -1049,6 +1139,25 @@
         <a href="#pricing" class="nav__link">PRICING</a>
         <a href="https://calendly.com/hello-goodwebsites/30min" target="_blank" rel="noopener" class="btn btn--yellow" style="font-size:16px; padding:12px 24px;">BOOK A CALL</a>
       </div>
+      <button class="nav__burger" id="nav-burger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <!-- Mobile drawer -->
+    <div class="nav__drawer" id="nav-drawer">
+      <a href="#problems" class="nav__drawer-link">THE PROBLEM</a>
+      <a href="#included" class="nav__drawer-link">INCLUDED</a>
+      <a href="#pricing" class="nav__drawer-link">PRICING</a>
+      <div class="nav__drawer-cta">
+        <a href="https://calendly.com/hello-goodwebsites/30min" target="_blank" rel="noopener" class="btn btn--yellow btn--lg" style="width:100%;justify-content:center;">BOOK A CALL</a>
+      </div>
+      <div class="nav__drawer-meta">
+        <a href="mailto:hello@goodwebsites.ca" class="nav__drawer-email">hello@goodwebsites.ca</a>
+        <a href="https://www.instagram.com/goodwebsites.ca/" target="_blank" rel="noopener" class="nav__drawer-insta">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg>
+          @goodwebsites.ca
+        </a>
+      </div>
     </div>
   </nav>
 
@@ -1467,6 +1576,27 @@
   </a>
 
   <script>
+    /* ── Burger menu ── */
+    const burger = document.getElementById('nav-burger');
+    const drawer = document.getElementById('nav-drawer');
+
+    burger.addEventListener('click', () => {
+      const open = drawer.classList.toggle('open');
+      burger.classList.toggle('open', open);
+      burger.setAttribute('aria-expanded', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    });
+
+    // Close on drawer link click
+    drawer.querySelectorAll('.nav__drawer-link').forEach(link => {
+      link.addEventListener('click', () => {
+        drawer.classList.remove('open');
+        burger.classList.remove('open');
+        burger.setAttribute('aria-expanded', false);
+        document.body.style.overflow = '';
+      });
+    });
+
     /* ── Scroll reveal ── */
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => {
